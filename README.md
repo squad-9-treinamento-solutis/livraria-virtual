@@ -26,7 +26,8 @@ git clone https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtua
 
 **Banco de dados:**
 
-![desafio-livraria-virtual-banco-de-dados](https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual/assets/76819323/b82effd0-2115-4495-ba0e-07b40a5bf609)
+![desafio-livraria-virtual-banco-de-dados](https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual/assets/76819323/292ab6ec-66df-48d8-942e-2197c6a53676)
+
 
 ## ✒️ Autores
 
