@@ -1,9 +1,10 @@
 package br.com.solutis.livraria.domain;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Data
@@ -11,8 +12,8 @@ import lombok.*;
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@DiscriminatorValue("ebook")
+@SuperBuilder
+@Table(name = "e_books")
 public class EBook extends Book{
     @NotNull(message = "Size is required")
     private Float size;
