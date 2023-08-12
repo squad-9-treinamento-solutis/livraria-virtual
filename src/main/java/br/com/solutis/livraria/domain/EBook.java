@@ -2,7 +2,6 @@ package br.com.solutis.livraria.domain;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -13,8 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "e_books")
-@DiscriminatorValue("book")
+@DiscriminatorValue("ebook")
 public class EBook extends Book{
     @NotNull(message = "Size is required")
     private Float size;

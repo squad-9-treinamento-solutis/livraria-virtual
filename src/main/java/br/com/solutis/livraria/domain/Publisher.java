@@ -25,9 +25,8 @@ public class Publisher {
     @Size(min = 3, message = "Name must be at least 3 characters long")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
-    private List<Book> book;
+    @OneToMany(mappedBy = "publisher")
+    private List<Book> books;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)

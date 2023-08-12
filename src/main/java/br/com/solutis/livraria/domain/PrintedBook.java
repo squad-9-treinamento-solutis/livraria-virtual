@@ -2,7 +2,6 @@ package br.com.solutis.livraria.domain;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -13,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "printed_books")
 @DiscriminatorValue("printed")
 public class PrintedBook extends Book{
     @NotNull(message = "Shipment is required")
