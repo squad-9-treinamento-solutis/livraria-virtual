@@ -25,7 +25,12 @@ public class Author {
     @Size(min = 3, message = "Name must be at least 3 characters long")
     private String name;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany
+    @JoinTable(
+            name = "books_authors",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
     private List<Book> books;
 
     @Temporal(TemporalType.TIMESTAMP)
