@@ -21,18 +21,16 @@ public class BookController {
 
     @PostMapping(path = "/printed")
     public ResponseEntity<PrintedBook> addPrintedBook(@RequestBody @Valid PrintedBook printedBook) {
-        PrintedBook createdBook = printedBookService.addBook(printedBook);
-        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+        return new ResponseEntity<>(printedBookService.addBook(printedBook), HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/eletronic")
     public ResponseEntity<EBook> addEbook(@RequestBody @Valid EBook eBook) {
-        EBook createdBook = eBookService.addBook(eBook);
-        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+        return new ResponseEntity<>(eBookService.addBook(eBook), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeBook(@PathVariable Long id) {
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         bookService.removeBook(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
