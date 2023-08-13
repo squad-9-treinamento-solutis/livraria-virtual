@@ -5,6 +5,8 @@ import br.com.solutis.livraria.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 /*
@@ -15,5 +17,12 @@ public class BookService<T extends Book> {
 
     public T addBook(T book) {
         return bookRepository.save(book);
+    }
+    public T updateBook(T book){
+        Optional<T> savedBook = bookRepository.findById(book.getId());
+        if (savedBook != null){
+            return bookRepository.save(book);
+        }
+        return null;
     }
 }
