@@ -54,7 +54,12 @@ public class BookController {
     @PutMapping(path = "/printed")
     @Transactional
     public ResponseEntity<PrintedBook> updatePrintedBook(@RequestBody PrintedBookDTO printedBookDTO){
+        if (printedBookDTO.getId() == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         PrintedBook printedBook = PrintedBook.builder()
+                .id(printedBookDTO.getId())
                 .title(printedBookDTO.getTitle())
                 .price(printedBookDTO.getPrice())
                 .shipment(printedBookDTO.getShipment())
@@ -65,11 +70,15 @@ public class BookController {
                 .build();
         return new ResponseEntity<>(printedBookService.updateBook(printedBook), HttpStatus.NO_CONTENT);
     }
-
     @PutMapping(path = "/eletronic")
     @Transactional
     public ResponseEntity<EBook> updatePrintedBook(@RequestBody @Valid EBookDTO eBookDTO){
+        if (eBookDTO.getId() == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         EBook eBook = EBook.builder()
+                .id(eBookDTO.getId())
                 .title(eBookDTO.getTitle())
                 .price(eBookDTO.getPrice())
                 .size(eBookDTO.getSize())
