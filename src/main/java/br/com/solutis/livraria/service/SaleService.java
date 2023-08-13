@@ -1,11 +1,10 @@
 package br.com.solutis.livraria.service;
 
-import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.domain.Book;
+import br.com.solutis.livraria.domain.PrintedBook;
 import br.com.solutis.livraria.domain.Sale;
 import br.com.solutis.livraria.dto.SaleDTO;
 import br.com.solutis.livraria.exception.BadRequestException;
-import br.com.solutis.livraria.repository.AuthorRepository;
 import br.com.solutis.livraria.repository.BookRepository;
 import br.com.solutis.livraria.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,25 +18,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SaleService {
     private final SaleRepository saleRepository;
-    private final BookRepository bookRepository;
+    private final BookRepository<Book> bookRepository;
+
     public Sale addSale(SaleDTO saleDTO) {
-        try{
+        List<Book> books = new ArrayList<>();
 
-            List<Book> books = new ArrayList<>();
-            for (Book book: books){
-                books.add((Book) bookRepository.findById(book.getId()).
-                        orElseThrow(()-> new BadRequestException("Book Not Found")));
-                System.out.println(book);
+        for (Long id : saleDTO.getBooksId()) {
+            Book book = bookRepository.findById(id)
+                    .orElseThrow(()-> new BadRequestException("Book Not Found"));
+
+            if (book instanceof PrintedBook) {
+                int stock = ((PrintedBook) book).getStock();
+                if (stock > 0) {
+                    int newStock = ((PrintedBook) book).getStock() - 1;
+                    ((PrintedBook) book).setStock(newStock);
+                } else {
+                    throw new BadRequestException("Book Out of Stock");
+                }
             }
-            return saleRepository.save(Sale.builder()
-                    .clientName(saleDTO.getClientName())
-                    .value(saleDTO.getValue())
-                    .books(books)
-                    .build());
 
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+            books.add(book);
         }
+
+        return saleRepository.save(Sale.builder()
+                        .clientName(saleDTO.getClientName())
+                        .value(saleDTO.getValue())
+                        .books(books)
+                .build());
     }
 
     public Sale updateSale(Sale sale){
