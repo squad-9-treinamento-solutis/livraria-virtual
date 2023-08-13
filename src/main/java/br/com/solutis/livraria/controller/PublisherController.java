@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/publisher")
+@RequestMapping("/api/publishers")
 @RequiredArgsConstructor
 @CrossOrigin
 public class PublisherController {

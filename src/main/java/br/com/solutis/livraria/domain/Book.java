@@ -1,5 +1,7 @@
 package br.com.solutis.livraria.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -33,6 +35,7 @@ public abstract class Book {
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @ManyToMany
     @JoinTable(
             name = "books_authors",
@@ -41,6 +44,7 @@ public abstract class Book {
     )
     private List<Author> authors;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "books_sales",
