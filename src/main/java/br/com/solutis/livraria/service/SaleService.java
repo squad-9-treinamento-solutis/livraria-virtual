@@ -40,10 +40,11 @@ public class SaleService {
             books.add(book);
         }
 
-        return saleRepository.save(Sale.builder()
-                        .clientName(saleDTO.getClientName())
-                        .value(saleDTO.getValue())
-                        .books(books)
+        return saleRepository.save(
+                Sale.builder()
+                .clientName(saleDTO.getClientName())
+                .value(saleDTO.getValue())
+                .books(books)
                 .build());
     }
 

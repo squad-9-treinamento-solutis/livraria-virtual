@@ -1,10 +1,7 @@
 package br.com.solutis.livraria.controller;
 
-import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.domain.Sale;
-import br.com.solutis.livraria.dto.AuthorDTO;
 import br.com.solutis.livraria.dto.SaleDTO;
-import br.com.solutis.livraria.service.AuthorService;
 import br.com.solutis.livraria.service.SaleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +19,6 @@ public class SaleController {
 
     @PostMapping
     public ResponseEntity<Sale> addSale(@RequestBody @Valid SaleDTO saleDTO){
-
         return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
     }
 

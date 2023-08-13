@@ -1,6 +1,7 @@
 package br.com.solutis.livraria.dto;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class SaleDTO {
     private Float value;
 
     @NotNull(message = "Books id are required")
+    @NotEmpty(message = "Books id are required")
     private List<Long> booksId;
 
 }
