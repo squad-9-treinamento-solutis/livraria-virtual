@@ -29,4 +29,10 @@ public class AuthorService {
         }
         return null;
     }
+
+    public Author findById(Long id) {
+
+        return authorRepository.findById(id).orElse(null);
+
+    }
 }

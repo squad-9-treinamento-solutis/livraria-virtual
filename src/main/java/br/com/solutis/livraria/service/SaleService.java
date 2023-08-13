@@ -1,5 +1,6 @@
 package br.com.solutis.livraria.service;
 
+import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.domain.Book;
 import br.com.solutis.livraria.domain.PrintedBook;
 import br.com.solutis.livraria.domain.Sale;
@@ -54,5 +55,11 @@ public class SaleService {
             return saleRepository.save(sale);
         }
         return null;
+    }
+
+    public Sale findById(Long id) {
+
+        return saleRepository.findById(id).orElse(null);
+
     }
 }

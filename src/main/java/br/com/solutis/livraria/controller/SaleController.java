@@ -32,4 +32,15 @@ public class SaleController {
         return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Sale> findById(@PathVariable Long id) {
+
+        Sale sale = saleService.findById(id);
+
+        if (sale != null) {
+            return new ResponseEntity<>(sale, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
