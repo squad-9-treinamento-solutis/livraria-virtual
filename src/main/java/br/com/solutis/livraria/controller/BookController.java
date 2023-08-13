@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/book")
 @RequiredArgsConstructor
 @CrossOrigin
 public class BookController {
