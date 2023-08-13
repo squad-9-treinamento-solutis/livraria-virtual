@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class EBookPostRequestBody {
+public class EBookPutRequestBody {
     @NotNull(message = "Title is required")
     @Size(min = 3, message = "Title must be at least 3 characters long")
     private String title;
