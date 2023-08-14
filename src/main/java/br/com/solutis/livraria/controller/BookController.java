@@ -85,7 +85,7 @@ public class BookController {
 
     @PutMapping(path = "/eletronic")
     @Transactional
-    public ResponseEntity<EBook> updatePrintedBook(@RequestBody @Valid EBookDTO eBookDTO) {
+    public ResponseEntity<EBook> updateEletronicBook(@RequestBody @Valid EBookDTO eBookDTO) {
         if (eBookDTO.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -124,7 +124,7 @@ public class BookController {
 
         List<Author> authors = new ArrayList<>();
 
-        for (Long authorId :authorsIds) {
+        for (Long authorId : authorsIds) {
             authors.add(authorService.findById(authorId));
         }
 

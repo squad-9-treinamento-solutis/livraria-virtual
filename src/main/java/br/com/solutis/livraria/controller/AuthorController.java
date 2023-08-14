@@ -18,14 +18,14 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
-    public ResponseEntity<Author> addAuthor(@RequestBody @Valid Author author){
+    public ResponseEntity<Author> addAuthor(@RequestBody @Valid Author author) {
         return new ResponseEntity<>(authorService.addAuthor(author), HttpStatus.CREATED);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Author> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO){
-        if (authorDTO.getId() == null){
+    public ResponseEntity<Author> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
+        if (authorDTO.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -42,5 +42,4 @@ public class AuthorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
 }
