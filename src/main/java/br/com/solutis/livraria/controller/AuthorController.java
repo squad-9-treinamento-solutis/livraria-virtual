@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/authors")
 @RequiredArgsConstructor
@@ -43,4 +45,10 @@ public class AuthorController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<Author>> findAllAuthors() {
+        List<Author> Authors = authorService.findAllAuthors();
+
+        return new ResponseEntity<>(Authors, HttpStatus.OK);
+    }
 }
