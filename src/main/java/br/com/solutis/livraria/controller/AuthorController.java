@@ -1,7 +1,6 @@
 package br.com.solutis.livraria.controller;
 
 import br.com.solutis.livraria.domain.Author;
-import br.com.solutis.livraria.domain.EBook;
 import br.com.solutis.livraria.dto.AuthorDTO;
 import br.com.solutis.livraria.service.AuthorService;
 import jakarta.validation.Valid;
@@ -31,6 +30,17 @@ public class AuthorController {
         }
 
         return new ResponseEntity<>(authorService.updateAuthor(authorDTO), HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Author> findById(@PathVariable Long id) {
+        Author author = authorService.findById(id);
+
+        if (author != null) {
+            return new ResponseEntity<>(author, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

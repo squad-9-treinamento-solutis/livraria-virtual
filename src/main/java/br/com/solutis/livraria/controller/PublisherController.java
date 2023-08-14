@@ -1,6 +1,5 @@
 package br.com.solutis.livraria.controller;
 
-import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.domain.Publisher;
 import br.com.solutis.livraria.dto.PublisherDTO;
 import br.com.solutis.livraria.service.PublisherService;
@@ -32,5 +31,17 @@ public class PublisherController {
         }
 
         return new ResponseEntity<>(publisherService.updatePublisher(publisherDTO), HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Publisher> findById(@PathVariable Long id) {
+
+        Publisher publisher = publisherService.findById(id);
+
+        if (publisher != null) {
+            return new ResponseEntity<>(publisher, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

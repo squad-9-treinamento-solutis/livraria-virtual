@@ -30,4 +30,10 @@ public class PublisherService {
         }
         return null;
     }
+
+    public Publisher findById(Long id) {
+
+        return publisherRepository.findById(id).orElse(null);
+
+    }
 }

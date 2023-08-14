@@ -1,5 +1,6 @@
 package br.com.solutis.livraria.controller;
 
+import br.com.solutis.livraria.domain.Book;
 import br.com.solutis.livraria.domain.EBook;
 import br.com.solutis.livraria.domain.PrintedBook;
 import br.com.solutis.livraria.repository.PublisherRepository;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin
 public class BookController {
+
+    private final BookService<Book> bookService;
     private final BookService<EBook> eBookService;
     private final BookService<PrintedBook> printedBookService;
     private final PublisherRepository publisherRepository;
@@ -88,5 +91,17 @@ public class BookController {
                 .build();
 
         return new ResponseEntity<>(eBookService.updateBook(eBook), HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Book> findById(@PathVariable Long id) {
+
+        Book book = bookService.findById(id);
+
+        if (book != null) {
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
