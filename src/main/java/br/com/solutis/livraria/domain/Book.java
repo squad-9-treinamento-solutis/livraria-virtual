@@ -1,6 +1,7 @@
 package br.com.solutis.livraria.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -35,7 +36,7 @@ public abstract class Book {
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties("books")
     @ManyToMany
     @JoinTable(
             name = "books_authors",
@@ -70,5 +71,16 @@ public abstract class Book {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new java.util.Date();
+    }
+
+    @Override
+    public String toString() {
+        return "Book[" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ']';
     }
 }

@@ -19,8 +19,8 @@ public class BookService<T extends Book> {
     }
 
     public T updateBook(T book) {
-        T savedBook = findById(book.getId());
-        return bookRepository.save(savedBook);
+        findById(book.getId());
+        return bookRepository.save(book);
     }
 
     public T findById(Long id) {

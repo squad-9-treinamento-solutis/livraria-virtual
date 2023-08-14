@@ -48,4 +48,14 @@ public class Publisher {
     protected void onUpdate() {
         updatedAt = new java.util.Date();
     }
+
+    @Override
+    public String toString() {
+        return "Publisher[" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ']';
+    }
 }

@@ -21,4 +21,12 @@ public class PrintedBook extends Book{
 
     @NotNull(message = "Stock is required")
     private Integer stock;
+
+    @Override
+    public String toString() {
+        return "PrintedBook[" +
+                "shipment=" + shipment +
+                ", stock=" + stock +
+                "] " + super.toString();
+    }
 }

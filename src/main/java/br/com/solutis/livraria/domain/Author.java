@@ -1,5 +1,6 @@
 package br.com.solutis.livraria.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -25,6 +26,7 @@ public class Author {
     @Size(min = 3, message = "Name must be at least 3 characters long")
     private String name;
 
+    @JsonIgnoreProperties("authors")
     @ManyToMany
     @JoinTable(
             name = "books_authors",
@@ -50,5 +52,15 @@ public class Author {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new java.util.Date();
+    }
+
+    @Override
+    public String toString() {
+        return "Author[" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ']';
     }
 }
