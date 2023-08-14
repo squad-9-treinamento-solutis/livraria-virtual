@@ -7,6 +7,8 @@ import br.com.solutis.livraria.dto.SaleDTO;
 import br.com.solutis.livraria.exception.BadRequestException;
 import br.com.solutis.livraria.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,12 +17,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SaleService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SaleService.class);
     private final SaleRepository saleRepository;
     private final BookService<Book> bookService;
 
     public Sale addSale(SaleDTO saleDTO) {
         BooksAndValue booksAndValue = getBookList(saleDTO);
 
+        LOGGER.info("Adding sale: {}", saleDTO);
         return saleRepository.save(
                 Sale.builder()
                         .clientName(saleDTO.getClientName())
@@ -49,6 +53,7 @@ public class SaleService {
 
         BooksAndValue booksAndValue = getBookList(saleDTO);
 
+        LOGGER.info("Updating sale with ID: {}", saleDTO.getId());
         return saleRepository.save(
                 Sale.builder()
                         .id(saleDTO.getId())
@@ -60,6 +65,7 @@ public class SaleService {
     }
 
     public Sale findById(Long id) {
+        LOGGER.info("Finding sale with ID: {}", id);
         return saleRepository.findById(id)
                 .orElseThrow(() -> new BadRequestException("Sale not found"));
     }
@@ -76,6 +82,7 @@ public class SaleService {
                 if (stock > 0) {
                     printedBook.setStock(printedBook.getStock() - 1);
                 } else {
+                    LOGGER.error("Book out of Stock with ID: {}", printedBook.getId());
                     throw new BadRequestException("Book Out of Stock");
                 }
             }
