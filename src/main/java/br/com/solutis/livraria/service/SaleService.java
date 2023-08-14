@@ -5,7 +5,6 @@ import br.com.solutis.livraria.domain.PrintedBook;
 import br.com.solutis.livraria.domain.Sale;
 import br.com.solutis.livraria.dto.SaleDTO;
 import br.com.solutis.livraria.exception.BadRequestException;
-import br.com.solutis.livraria.repository.BookRepository;
 import br.com.solutis.livraria.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,21 +16,74 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SaleService {
     private final SaleRepository saleRepository;
-    private final BookRepository<Book> bookRepository;
+    private final BookService<Book> bookService;
 
     public Sale addSale(SaleDTO saleDTO) {
+        BooksAndValue booksAndValue = getBookList(saleDTO);
+
+        return saleRepository.save(
+                Sale.builder()
+                        .clientName(saleDTO.getClientName())
+                        .value(booksAndValue.value)
+                        .books(booksAndValue.books)
+                        .build());
+    }
+
+    public Sale updateSale(SaleDTO saleDTO) {
+        Sale savedSale = findById(saleDTO.getId());
+
+        for (Book book : savedSale.getBooks()) {
+            if (book instanceof PrintedBook printedBook) {
+
+                bookService.updateBook(
+                        PrintedBook.builder()
+                                .id(printedBook.getId())
+                                .stock(printedBook.getStock() + 1)
+                                .shipment(printedBook.getShipment())
+                                .publisher(printedBook.getPublisher())
+                                .title(printedBook.getTitle())
+                                .price(printedBook.getPrice())
+                                .build()
+                );
+            }
+        }
+
+        saleRepository.save(
+                Sale.builder()
+                        .id(saleDTO.getId())
+                        .clientName(saleDTO.getClientName())
+                        .books(null)
+                        .value(0f).build()
+        );
+
+        BooksAndValue booksAndValue = getBookList(saleDTO);
+
+        return saleRepository.save(
+                Sale.builder()
+                        .id(saleDTO.getId())
+                        .clientName(saleDTO.getClientName())
+                        .books(booksAndValue.books())
+                        .value(booksAndValue.value())
+                        .build()
+        );
+    }
+
+    public Sale findById(Long id) {
+        return saleRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Sale not found"));
+    }
+
+    private BooksAndValue getBookList(SaleDTO sale) {
         List<Book> books = new ArrayList<>();
         float value = 0;
 
-        for (Long id : saleDTO.getBooksId()) {
-            Book book = bookRepository.findById(id)
-                    .orElseThrow(() -> new BadRequestException("Book Not Found"));
+        for (Long id : sale.getBooksId()) {
+            Book book = bookService.findById(id);
 
-            if (book instanceof PrintedBook) {
-                int stock = ((PrintedBook) book).getStock();
+            if (book instanceof PrintedBook printedBook) {
+                int stock = printedBook.getStock();
                 if (stock > 0) {
-                    int newStock = ((PrintedBook) book).getStock() - 1;
-                    ((PrintedBook) book).setStock(newStock);
+                    printedBook.setStock(printedBook.getStock() - 1);
                 } else {
                     throw new BadRequestException("Book Out of Stock");
                 }
@@ -40,22 +92,9 @@ public class SaleService {
             value += book.getPrice();
             books.add(book);
         }
-
-        return saleRepository.save(
-                Sale.builder()
-                        .clientName(saleDTO.getClientName())
-                        .value(value)
-                        .books(books)
-                        .build());
+        return new BooksAndValue(books, value);
     }
 
-    public Sale updateSale(SaleDTO sale) {
-        findById(sale.getId());
-
-        return saleRepository.save(Sale.builder().clientName(sale.getClientName()).build());
-    }
-
-    public Sale findById(Long id) {
-        return saleRepository.findById(id).orElseThrow(() -> new BadRequestException("Sale not found"));
+    private record BooksAndValue(List<Book> books, float value) {
     }
 }

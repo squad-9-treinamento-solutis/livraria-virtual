@@ -1,5 +1,6 @@
 package br.com.solutis.livraria.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -28,6 +29,7 @@ public class Sale {
     @NotNull(message = "Value is required")
     private Float value;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "books_sales",
