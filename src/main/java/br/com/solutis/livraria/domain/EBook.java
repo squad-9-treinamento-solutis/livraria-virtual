@@ -17,4 +17,11 @@ import lombok.experimental.SuperBuilder;
 public class EBook extends Book{
     @NotNull(message = "Size is required")
     private Float size;
+
+    @Override
+    public String toString() {
+        return "EBook[" +
+                "size=" + size +
+                "] " + super.toString();
+    }
 }
