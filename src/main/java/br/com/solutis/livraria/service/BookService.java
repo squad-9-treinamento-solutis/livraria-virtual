@@ -1,13 +1,10 @@
 package br.com.solutis.livraria.service;
 
-import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.domain.Book;
-import br.com.solutis.livraria.domain.PrintedBook;
+import br.com.solutis.livraria.exception.BadRequestException;
 import br.com.solutis.livraria.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,16 +17,13 @@ public class BookService<T extends Book> {
     public T addBook(T book) {
         return bookRepository.save(book);
     }
-    public T updateBook(T book){
-        Optional<T> savedBook = bookRepository.findById(book.getId());
-        if (savedBook != null){
-            return bookRepository.save(book);
-        }
-        return null;
+
+    public T updateBook(T book) {
+        T savedBook = findById(book.getId());
+        return bookRepository.save(savedBook);
     }
-    public Book findById(Long id) {
 
-        return bookRepository.findById(id).orElse(null);
-
+    public T findById(Long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new BadRequestException("Book not found"));
     }
 }
