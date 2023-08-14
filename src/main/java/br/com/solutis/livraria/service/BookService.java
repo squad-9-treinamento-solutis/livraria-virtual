@@ -26,4 +26,8 @@ public class BookService<T extends Book> {
     public T findById(Long id) {
         return bookRepository.findById(id).orElseThrow(() -> new BadRequestException("Book not found"));
     }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
 }

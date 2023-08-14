@@ -18,7 +18,7 @@ public class AuthorService {
 
     public Author updateAuthor(AuthorDTO authorDTO) {
         findById(authorDTO.getId());
-       
+
         return authorRepository.save(
                 Author.builder()
                         .id(authorDTO.getId())
@@ -29,5 +29,9 @@ public class AuthorService {
 
     public Author findById(Long id) {
         return authorRepository.findById(id).orElseThrow(() -> new BadRequestException("Author not found"));
+    }
+
+    public void deleteAuthor(Long id) {
+        authorRepository.deleteById(id);
     }
 }

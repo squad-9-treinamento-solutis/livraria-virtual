@@ -30,4 +30,8 @@ public class PublisherService {
     public Publisher findById(Long id) {
         return publisherRepository.findById(id).orElseThrow(() -> new BadRequestException("Publisher not found"));
     }
+
+    public void deletePublisher(Long id) {
+        publisherRepository.deleteById(id);
+    }
 }
