@@ -99,4 +99,8 @@ public class SaleService {
 
     private record BooksAndValue(List<Book> books, float value) {
     }
+
+    public void deleteSale(Long id) {
+        saleRepository.deleteById(id);
+    }
 }

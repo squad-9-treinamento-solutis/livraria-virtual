@@ -123,7 +123,7 @@ public class BookController {
 
         return new ResponseEntity<>(Books, HttpStatus.OK);
     }
-    
+
     private List<Author> getAuthorsFromIds(List<Long> authorsIds) {
         if (authorsIds == null) {
             return null;
@@ -136,5 +136,12 @@ public class BookController {
         }
 
         return authors;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Book> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

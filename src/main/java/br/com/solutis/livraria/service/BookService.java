@@ -37,4 +37,8 @@ public class BookService<T extends Book> {
     public List<T> findAllBooks() {
         return bookRepository.findAll();
     }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
 }

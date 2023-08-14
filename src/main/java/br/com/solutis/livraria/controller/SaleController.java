@@ -43,6 +43,13 @@ public class SaleController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Sale> deleteSale(@PathVariable Long id) {
+        saleService.deleteSale(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<Sale>> findAllSales() {
         List<Sale> sales = saleService.findAllSales();

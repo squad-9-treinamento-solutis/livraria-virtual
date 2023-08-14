@@ -47,6 +47,13 @@ public class PublisherController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Publisher> deletePublisher(@PathVariable Long id) {
+        publisherService.deletePublisher(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<Publisher>> findAllPublishers() {
         List<Publisher> publishers = publisherService.findAllPublishers();
