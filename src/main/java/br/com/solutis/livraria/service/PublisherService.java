@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PublisherService {
@@ -35,5 +37,9 @@ public class PublisherService {
     public Publisher findById(Long id) {
         LOGGER.info("Finding publisher with ID: {}", id);
         return publisherRepository.findById(id).orElseThrow(() -> new BadRequestException("Publisher not found"));
+    }
+
+    public List<Publisher> findAllPublishers() {
+        return publisherRepository.findAll();
     }
 }

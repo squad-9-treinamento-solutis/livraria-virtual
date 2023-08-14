@@ -117,6 +117,13 @@ public class BookController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<List<Book>> findAllBooks() {
+        List<Book> Books = bookService.findAllBooks();
+
+        return new ResponseEntity<>(Books, HttpStatus.OK);
+    }
+    
     private List<Author> getAuthorsFromIds(List<Long> authorsIds) {
         if (authorsIds == null) {
             return null;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +36,9 @@ public class AuthorService {
     public Author findById(Long id) {
         LOGGER.info("Finding author with ID: {}", id);
         return authorRepository.findById(id).orElseThrow(() -> new BadRequestException("Author not found"));
+    }
+
+    public List<Author> findAllAuthors() {
+        return authorRepository.findAll();
     }
 }

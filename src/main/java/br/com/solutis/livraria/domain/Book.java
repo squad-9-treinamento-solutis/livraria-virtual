@@ -2,7 +2,6 @@ package br.com.solutis.livraria.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -32,6 +31,7 @@ public abstract class Book {
     @NotNull(message = "Price is required")
     private Float price;
 
+    @JsonIgnoreProperties("books")
     @ManyToOne
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;

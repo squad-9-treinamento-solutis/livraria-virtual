@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +32,9 @@ public class BookService<T extends Book> {
     public T findById(Long id) {
         LOGGER.info("Finding book with ID: {}", id);
         return bookRepository.findById(id).orElseThrow(() -> new BadRequestException("Book not found"));
+    }
+
+    public List<T> findAllBooks() {
+        return bookRepository.findAll();
     }
 }

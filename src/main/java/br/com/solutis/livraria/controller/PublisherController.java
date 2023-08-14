@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/publishers")
 @RequiredArgsConstructor
@@ -25,8 +27,8 @@ public class PublisherController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Publisher> updatePublisher(@RequestBody @Valid PublisherDTO publisherDTO){
-        if (publisherDTO.getId() == null){
+    public ResponseEntity<Publisher> updatePublisher(@RequestBody @Valid PublisherDTO publisherDTO) {
+        if (publisherDTO.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -43,5 +45,12 @@ public class PublisherController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Publisher>> findAllPublishers() {
+        List<Publisher> publishers = publisherService.findAllPublishers();
+
+        return new ResponseEntity<>(publishers, HttpStatus.OK);
     }
 }
