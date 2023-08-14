@@ -6,6 +6,7 @@ import br.com.solutis.livraria.exception.BadRequestException;
 import br.com.solutis.livraria.repository.PublisherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +30,9 @@ public class PublisherService {
 
     public Publisher findById(Long id) {
         return publisherRepository.findById(id).orElseThrow(() -> new BadRequestException("Publisher not found"));
+    }
+
+    public List<Publisher> findAllPublichers() {
+        return publisherRepository.findAll();
     }
 }

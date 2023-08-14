@@ -1,12 +1,9 @@
 package br.com.solutis.livraria.dto;
 
-import br.com.solutis.livraria.domain.Book;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class AuthorDTO {
