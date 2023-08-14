@@ -54,4 +54,15 @@ public class Sale {
     protected void onUpdate() {
         updatedAt = new java.util.Date();
     }
+
+    @Override
+    public String toString() {
+        return "Sale[" +
+                "id=" + id +
+                ", clientName='" + clientName + '\'' +
+                ", value=" + value +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ']';
+    }
 }
