@@ -18,18 +18,14 @@ public class SaleController {
     private final SaleService saleService;
 
     @PostMapping
-    public ResponseEntity<Sale> addSale(@RequestBody @Valid SaleDTO saleDTO){
+    public ResponseEntity<Sale> addSale(@RequestBody @Valid SaleDTO saleDTO) {
         return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Sale> updateSale(@RequestBody @Valid SaleDTO saleDTO){
-        if (saleDTO.getId() == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
+    public ResponseEntity<Sale> updateSale(@RequestBody @Valid SaleDTO saleDTO) {
+        return new ResponseEntity<>(saleService.updateSale(saleDTO), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")

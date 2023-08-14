@@ -3,10 +3,10 @@ package br.com.solutis.livraria.controller;
 import br.com.solutis.livraria.domain.Book;
 import br.com.solutis.livraria.domain.EBook;
 import br.com.solutis.livraria.domain.PrintedBook;
-import br.com.solutis.livraria.repository.PublisherRepository;
 import br.com.solutis.livraria.dto.EBookDTO;
 import br.com.solutis.livraria.dto.PrintedBookDTO;
 import br.com.solutis.livraria.service.BookService;
+import br.com.solutis.livraria.service.PublisherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class BookController {
     private final BookService<Book> bookService;
     private final BookService<EBook> eBookService;
     private final BookService<PrintedBook> printedBookService;
-    private final PublisherRepository publisherRepository;
+    private final PublisherService publisherService;
 
     @PostMapping(path = "/printed")
     public ResponseEntity<PrintedBook> addPrintedBook(@RequestBody @Valid PrintedBookDTO printedBookDTO) {
@@ -33,7 +33,7 @@ public class BookController {
                 .shipment(printedBookDTO.getShipment())
                 .stock(printedBookDTO.getStock())
                 .publisher(
-                        publisherRepository.findById(printedBookDTO.getPublisherId()).orElseThrow()
+                        publisherService.findById(printedBookDTO.getPublisherId())
                 )
                 .build();
 
@@ -47,7 +47,7 @@ public class BookController {
                 .price(eBookDTO.getPrice())
                 .size(eBookDTO.getSize())
                 .publisher(
-                        publisherRepository.findById(eBookDTO.getPublisherId()).orElseThrow()
+                        publisherService.findById(eBookDTO.getPublisherId())
                 )
                 .build();
 
@@ -56,8 +56,8 @@ public class BookController {
 
     @PutMapping(path = "/printed")
     @Transactional
-    public ResponseEntity<PrintedBook> updatePrintedBook(@RequestBody PrintedBookDTO printedBookDTO){
-        if (printedBookDTO.getId() == null){
+    public ResponseEntity<PrintedBook> updatePrintedBook(@RequestBody PrintedBookDTO printedBookDTO) {
+        if (printedBookDTO.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -68,15 +68,16 @@ public class BookController {
                 .shipment(printedBookDTO.getShipment())
                 .stock(printedBookDTO.getStock())
                 .publisher(
-                        publisherRepository.findById(printedBookDTO.getPublisherId()).orElseThrow()
+                        publisherService.findById(printedBookDTO.getPublisherId())
                 )
                 .build();
         return new ResponseEntity<>(printedBookService.updateBook(printedBook), HttpStatus.NO_CONTENT);
     }
+
     @PutMapping(path = "/eletronic")
     @Transactional
-    public ResponseEntity<EBook> updatePrintedBook(@RequestBody @Valid EBookDTO eBookDTO){
-        if (eBookDTO.getId() == null){
+    public ResponseEntity<EBook> updatePrintedBook(@RequestBody @Valid EBookDTO eBookDTO) {
+        if (eBookDTO.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -86,7 +87,7 @@ public class BookController {
                 .price(eBookDTO.getPrice())
                 .size(eBookDTO.getSize())
                 .publisher(
-                        publisherRepository.findById(eBookDTO.getPublisherId()).orElseThrow()
+                        publisherService.findById(eBookDTO.getPublisherId())
                 )
                 .build();
 

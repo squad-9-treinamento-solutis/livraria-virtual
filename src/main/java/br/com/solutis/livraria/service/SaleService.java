@@ -1,6 +1,5 @@
 package br.com.solutis.livraria.service;
 
-import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.domain.Book;
 import br.com.solutis.livraria.domain.PrintedBook;
 import br.com.solutis.livraria.domain.Sale;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +21,11 @@ public class SaleService {
 
     public Sale addSale(SaleDTO saleDTO) {
         List<Book> books = new ArrayList<>();
+        float value = 0;
 
         for (Long id : saleDTO.getBooksId()) {
             Book book = bookRepository.findById(id)
-                    .orElseThrow(()-> new BadRequestException("Book Not Found"));
+                    .orElseThrow(() -> new BadRequestException("Book Not Found"));
 
             if (book instanceof PrintedBook) {
                 int stock = ((PrintedBook) book).getStock();
@@ -38,28 +37,25 @@ public class SaleService {
                 }
             }
 
+            value += book.getPrice();
             books.add(book);
         }
 
         return saleRepository.save(
                 Sale.builder()
-                .clientName(saleDTO.getClientName())
-                .value(saleDTO.getValue())
-                .books(books)
-                .build());
+                        .clientName(saleDTO.getClientName())
+                        .value(value)
+                        .books(books)
+                        .build());
     }
 
-    public Sale updateSale(Sale sale){
-        Optional<Sale> savedSale = saleRepository.findById(sale.getId());
-        if (savedSale != null){
-            return saleRepository.save(sale);
-        }
-        return null;
+    public Sale updateSale(SaleDTO sale) {
+        findById(sale.getId());
+
+        return saleRepository.save(Sale.builder().clientName(sale.getClientName()).build());
     }
 
     public Sale findById(Long id) {
-
-        return saleRepository.findById(id).orElse(null);
-
+        return saleRepository.findById(id).orElseThrow(() -> new BadRequestException("Sale not found"));
     }
 }
