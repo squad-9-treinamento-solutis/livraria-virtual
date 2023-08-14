@@ -1,6 +1,6 @@
 package br.com.solutis.livraria.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,7 +26,7 @@ public class Publisher {
     @Size(min = 3, message = "Name must be at least 3 characters long")
     private String name;
 
-    @JsonIgnore
+    @JsonIgnoreProperties("publisher")
     @OneToMany(mappedBy = "publisher")
     private List<Book> books;
 
