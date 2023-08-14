@@ -34,7 +34,6 @@ public class SaleService {
 
         for (Book book : savedSale.getBooks()) {
             if (book instanceof PrintedBook printedBook) {
-
                 bookService.updateBook(
                         PrintedBook.builder()
                                 .id(printedBook.getId())
@@ -47,14 +46,6 @@ public class SaleService {
                 );
             }
         }
-
-        saleRepository.save(
-                Sale.builder()
-                        .id(saleDTO.getId())
-                        .clientName(saleDTO.getClientName())
-                        .books(null)
-                        .value(0f).build()
-        );
 
         BooksAndValue booksAndValue = getBookList(saleDTO);
 
