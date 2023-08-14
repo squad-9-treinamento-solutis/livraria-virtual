@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/publishers")
 @RequiredArgsConstructor
@@ -50,5 +52,12 @@ public class PublisherController {
         publisherService.deletePublisher(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Publisher>> findAllPublichers() {
+        List<Publisher> publichers = publisherService.findAllPublichers();
+
+        return new ResponseEntity<>(publichers, HttpStatus.OK);
     }
 }

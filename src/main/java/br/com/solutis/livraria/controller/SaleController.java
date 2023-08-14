@@ -5,6 +5,9 @@ import br.com.solutis.livraria.dto.SaleDTO;
 import br.com.solutis.livraria.service.SaleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,5 +48,12 @@ public class SaleController {
         saleService.deleteSale(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Sale>> findAllSales() {
+        List<Sale> sales = saleService.findAllSales();
+
+        return new ResponseEntity<>(sales, HttpStatus.OK);
     }
 }

@@ -95,6 +95,10 @@ public class SaleService {
         return new BooksAndValue(books, value);
     }
 
+    public List<Sale> findAllSales() {
+        return saleRepository.findAll();
+    }
+
     private record BooksAndValue(List<Book> books, float value) {
     }
 
