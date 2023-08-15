@@ -3,8 +3,12 @@ package br.com.solutis.livraria.controller;
 import br.com.solutis.livraria.domain.*;
 import br.com.solutis.livraria.dto.EBookDTO;
 import br.com.solutis.livraria.dto.PrintedBookDTO;
-import br.com.solutis.livraria.exception.BadRequestException;
-import br.com.solutis.livraria.service.*;
+import br.com.solutis.livraria.exception.BookNotFoundException;
+import br.com.solutis.livraria.exception.BookServiceException;
+import br.com.solutis.livraria.exception.ErrorResponse;
+import br.com.solutis.livraria.service.AuthorService;
+import br.com.solutis.livraria.service.BookService;
+import br.com.solutis.livraria.service.PublisherService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,105 +52,155 @@ public class BookController {
     }
 
     @PostMapping(path = "/printed")
-    public ResponseEntity<PrintedBook> addPrintedBook(@RequestBody @Valid PrintedBookDTO printedBookDTO) {
-        int printedBooks = printedBookService.countBooks();
 
-        if (printedBooks >= MAX_IMPRESSOS) {
-            throw new BadRequestException("Maximum number of printed books reached. Maximum number is: " + MAX_IMPRESSOS);
+    public ResponseEntity<?> addPrintedBook(@RequestBody @Valid PrintedBookDTO printedBookDTO) {
+
+
+        try {
+          
+            int printedBooks = printedBookService.countBooks();
+
+            if (printedBooks >= MAX_IMPRESSOS) {
+              throw new BadRequestException("Maximum number of printed books reached. Maximum number is: " + MAX_IMPRESSOS);
+            }
+            List<Author> authors = getAuthorsFromIds(printedBookDTO.getAuthorsId());
+            Publisher publisher = publisherService.findById(printedBookDTO.getPublisherId());
+
+            PrintedBook printedBook = PrintedBook.builder()
+                    .title(printedBookDTO.getTitle())
+                    .price(printedBookDTO.getPrice())
+                    .shipment(printedBookDTO.getShipment())
+                    .stock(printedBookDTO.getStock())
+                    .authors(authors)
+                    .publisher(publisher)
+                    .build();
+
+            return new ResponseEntity<>(printedBookService.addBook(printedBook), HttpStatus.CREATED);
+        } catch (BookServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error adding printed book: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        List<Author> authors = getAuthorsFromIds(printedBookDTO.getAuthorsId());
-        Publisher publisher = publisherService.findById(printedBookDTO.getPublisherId());
-
-        PrintedBook printedBook = PrintedBook.builder()
-                .title(printedBookDTO.getTitle())
-                .price(printedBookDTO.getPrice())
-                .shipment(printedBookDTO.getShipment())
-                .stock(printedBookDTO.getStock())
-                .authors(authors)
-                .publisher(publisher)
-                .build();
-
-        return new ResponseEntity<>(printedBookService.addBook(printedBook), HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/eletronic")
-    public ResponseEntity<EBook> addEbook(@RequestBody @Valid EBookDTO eBookDTO) {
-        int eBooks = eBookService.countBooks();
+    public ResponseEntity<?> addEbook(@RequestBody @Valid EBookDTO eBookDTO) {
 
-        if (eBooks >= MAX_ELETRONICOS) {
-            throw new BadRequestException("Maximum number of ebooks reached. Maximum number is: " + MAX_ELETRONICOS);
+
+        try {
+            int eBooks = eBookService.countBooks();
+
+            if (eBooks >= MAX_ELETRONICOS) {
+              throw new BadRequestException("Maximum number of ebooks reached. Maximum number is: " + MAX_ELETRONICOS);
+            }
+            List<Author> authors = getAuthorsFromIds(eBookDTO.getAuthorsId());
+            Publisher publisher = publisherService.findById(eBookDTO.getPublisherId());
+
+            EBook eBook = EBook.builder()
+                    .title(eBookDTO.getTitle())
+                    .price(eBookDTO.getPrice())
+                    .size(eBookDTO.getSize())
+                    .authors(authors)
+                    .publisher(publisher)
+                    .build();
+            return new ResponseEntity<>(eBookService.addBook(eBook), HttpStatus.CREATED);
+        } catch (BookServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error adding eletronic book: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        List<Author> authors = getAuthorsFromIds(eBookDTO.getAuthorsId());
-        Publisher publisher = publisherService.findById(eBookDTO.getPublisherId());
 
-        EBook eBook = EBook.builder()
-                .title(eBookDTO.getTitle())
-                .price(eBookDTO.getPrice())
-                .size(eBookDTO.getSize())
-                .authors(authors)
-                .publisher(publisher)
-                .build();
-
-        return new ResponseEntity<>(eBookService.addBook(eBook), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "/printed")
     @Transactional
-    public ResponseEntity<PrintedBook> updatePrintedBook(@RequestBody PrintedBookDTO printedBookDTO) {
-        if (printedBookDTO.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> updatePrintedBook(@RequestBody PrintedBookDTO printedBookDTO) {
+
+
+        try {
+            List<Author> authors = getAuthorsFromIds(printedBookDTO.getAuthorsId());
+            Publisher publisher = publisherService.findById(printedBookDTO.getPublisherId());
+
+            PrintedBook printedBook = PrintedBook.builder()
+                    .id(printedBookDTO.getId())
+                    .title(printedBookDTO.getTitle())
+                    .price(printedBookDTO.getPrice())
+                    .shipment(printedBookDTO.getShipment())
+                    .stock(printedBookDTO.getStock())
+                    .authors(authors)
+                    .publisher(publisher)
+                    .build();
+            return new ResponseEntity<>(printedBookService.updateBook(printedBook), HttpStatus.NO_CONTENT);
+        } catch (BookServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error updating printed book: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        List<Author> authors = getAuthorsFromIds(printedBookDTO.getAuthorsId());
-        Publisher publisher = publisherService.findById(printedBookDTO.getPublisherId());
-
-        PrintedBook printedBook = PrintedBook.builder()
-                .id(printedBookDTO.getId())
-                .title(printedBookDTO.getTitle())
-                .price(printedBookDTO.getPrice())
-                .shipment(printedBookDTO.getShipment())
-                .stock(printedBookDTO.getStock())
-                .authors(authors)
-                .publisher(publisher)
-                .build();
-        return new ResponseEntity<>(printedBookService.updateBook(printedBook), HttpStatus.NO_CONTENT);
     }
 
     @PutMapping(path = "/eletronic")
     @Transactional
-    public ResponseEntity<EBook> updateEletronicBook(@RequestBody @Valid EBookDTO eBookDTO) {
-        if (eBookDTO.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> updateEletronicBook(@RequestBody @Valid EBookDTO eBookDTO) {
+
+
+        try {
+            List<Author> authors = getAuthorsFromIds(eBookDTO.getAuthorsId());
+            Publisher publisher = publisherService.findById(eBookDTO.getPublisherId());
+
+            EBook eBook = EBook.builder()
+                    .id(eBookDTO.getId())
+                    .title(eBookDTO.getTitle())
+                    .price(eBookDTO.getPrice())
+                    .size(eBookDTO.getSize())
+                    .authors(authors)
+                    .publisher(publisher)
+                    .build();
+
+            return new ResponseEntity<>(eBookService.updateBook(eBook), HttpStatus.NO_CONTENT);
+        } catch (BookServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error updating printed book: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        List<Author> authors = getAuthorsFromIds(eBookDTO.getAuthorsId());
-        Publisher publisher = publisherService.findById(eBookDTO.getPublisherId());
+    }
 
-        EBook eBook = EBook.builder()
-                .id(eBookDTO.getId())
-                .title(eBookDTO.getTitle())
-                .price(eBookDTO.getPrice())
-                .size(eBookDTO.getSize())
-                .authors(authors)
-                .publisher(publisher)
-                .build();
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
-        return new ResponseEntity<>(eBookService.updateBook(eBook), HttpStatus.NO_CONTENT);
+
+        try {
+            Book book = bookService.findById(id);
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } catch (BookNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping
+    public ResponseEntity<?> findAllBooks() {
+
+
+        try {
+            List<Book> Books = bookService.findAllBooks();
+            return new ResponseEntity<>(Books, HttpStatus.OK);
+        } catch (BookServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Book> deleteBook(@PathVariable Long id) {
-        bookService.deleteBook(id);
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            bookService.deleteBook(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BookNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     private List<Author> getAuthorsFromIds(List<Long> authorsIds) {
-        if (authorsIds == null) {
-            return null;
-        }
+
 
         List<Author> authors = new ArrayList<>();
 
@@ -156,4 +210,5 @@ public class BookController {
 
         return authors;
     }
+
 }
