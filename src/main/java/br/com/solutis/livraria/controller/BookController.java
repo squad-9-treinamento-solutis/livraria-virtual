@@ -6,6 +6,8 @@ import br.com.solutis.livraria.dto.PrintedBookDTO;
 import br.com.solutis.livraria.exception.BookNotFoundException;
 import br.com.solutis.livraria.exception.BookServiceException;
 import br.com.solutis.livraria.exception.ErrorResponse;
+import br.com.solutis.livraria.exception.MaxLimitExceededException;
+import br.com.solutis.livraria.service.*;
 import br.com.solutis.livraria.service.AuthorService;
 import br.com.solutis.livraria.service.BookService;
 import br.com.solutis.livraria.service.PublisherService;
@@ -66,7 +68,7 @@ public class BookController {
             int printedBooks = printedBookService.countBooks();
 
             if (printedBooks >= MAX_IMPRESSOS) {
-              throw new BadRequestException("Maximum number of printed books reached. Maximum number is: " + MAX_IMPRESSOS);
+                throw new MaxLimitExceededException("Maximum number of printed books reached. Maximum number is: " + MAX_IMPRESSOS);
             }
             List<Author> authors = getAuthorsFromIds(printedBookDTO.getAuthorsId());
             Publisher publisher = publisherService.findById(printedBookDTO.getPublisherId());
@@ -96,7 +98,7 @@ public class BookController {
             int eBooks = eBookService.countBooks();
 
             if (eBooks >= MAX_ELETRONICOS) {
-              throw new BadRequestException("Maximum number of ebooks reached. Maximum number is: " + MAX_ELETRONICOS);
+                throw new MaxLimitExceededException("Maximum number of ebooks reached. Maximum number is: " + MAX_ELETRONICOS);
             }
             List<Author> authors = getAuthorsFromIds(eBookDTO.getAuthorsId());
             Publisher publisher = publisherService.findById(eBookDTO.getPublisherId());
