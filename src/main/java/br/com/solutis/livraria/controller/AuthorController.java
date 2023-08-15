@@ -31,11 +31,12 @@ public class AuthorController {
         } catch (AuthorServiceException e) {
             return new ResponseEntity<>(new ErrorResponse("Error adding author: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
     @PutMapping
     @Transactional
     @Operation(summary = "ATUALIZAR AUTOR", description = "Atualiza o autor")
-        public ResponseEntity<?> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
+    public ResponseEntity<?> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
 
         try {
             return new ResponseEntity<>(authorService.updateAuthor(authorDTO), HttpStatus.NO_CONTENT);
