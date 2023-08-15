@@ -1,7 +1,8 @@
 package br.com.solutis.livraria.service;
 
 import br.com.solutis.livraria.domain.Book;
-import br.com.solutis.livraria.exception.BadRequestException;
+import br.com.solutis.livraria.exception.BookNotFoundException;
+import br.com.solutis.livraria.exception.BookServiceException;
 import br.com.solutis.livraria.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,25 +21,46 @@ public class BookService<T extends Book> {
 
     public T addBook(T book) {
         LOGGER.info("Adding book: {}", book);
-        return bookRepository.save(book);
+        try{
+            return bookRepository.save(book);
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
+            throw new BookServiceException("An error occurred while adding book.", e);
+        }
+
     }
 
     public T updateBook(T book) {
         LOGGER.info("Updating book with ID: {}", book.getId());
         findById(book.getId());
-        return bookRepository.save(book);
+
+        try{
+            return bookRepository.save(book);
+        }catch(Exception e){
+            LOGGER.error(e.getMessage());
+            throw new BookServiceException("An error occurred while updating book.", e);
+        }
+
     }
 
     public T findById(Long id) {
         LOGGER.info("Finding book with ID: {}", id);
-        return bookRepository.findById(id).orElseThrow(() -> new BadRequestException("Book not found"));
+
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
     public List<T> findAllBooks() {
-        return bookRepository.findAll();
+        try{
+            return bookRepository.findAll();
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
+            throw new BookServiceException("An error occurred while fetching book.", e);
+        }
+
     }
 
     public void deleteBook(Long id) {
+        findById(id);
         bookRepository.deleteById(id);
     }
 }
