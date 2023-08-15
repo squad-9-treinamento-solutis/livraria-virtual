@@ -40,7 +40,7 @@ spring:
 Obs.: O arquivo se encontra na pasta ```resources```.
 
 ## 📕 Documentação da API
-
+- ![Swagger](http://localhost:8080/swagger-ui/index.html#/)
 - [ROUTES.md](./ROUTES.md)
 
 ## 📝 Diagramas
