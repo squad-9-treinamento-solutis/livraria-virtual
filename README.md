@@ -21,6 +21,24 @@ virtual que permite aos usuários comprar livros eletrônicos e livros impressos
 git clone https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual.git
 ```
 
+### 🔑 Variáveis de ambiente
+
+Renomear o ```application.secrets-example.yml``` para ```application.secrets.yml``` e trocar os seguintes valores:
+
+- `USERNAME`: Your MySQL username.
+- `PASSWORD`: Your MySQL password.
+- `URL`: MySQL URL  ```jdbc:mysql://localhost:3306/YOUR_DATABASE_NAME```
+
+```yml
+spring:
+  datasource:
+    username: ""
+    password: ""
+    url: ""
+```
+
+Obs.: O arquivo se encontra na pasta ```resources```.
+
 ## 📕 Documentação da API
 
 - [ROUTES.md](./ROUTES.md)
