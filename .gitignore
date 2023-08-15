@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 application.secrets.yml
+livraria.log
 
 ### STS ###
 .apt_generated

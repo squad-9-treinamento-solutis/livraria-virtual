@@ -19,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 public class SaleController {
+
+    private static final int MAX_VENDAS = 50;
     private final SaleService saleService;
 
     @PostMapping
@@ -45,7 +47,6 @@ public class SaleController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
 
-
         try {
             Sale sale = saleService.findById(id);
             return new ResponseEntity<>(sale, HttpStatus.OK);
@@ -54,6 +55,7 @@ public class SaleController {
         }
 
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSale(@PathVariable Long id) {

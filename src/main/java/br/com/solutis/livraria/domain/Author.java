@@ -27,7 +27,7 @@ public class Author {
     private String name;
 
     @JsonIgnoreProperties("authors")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "books_authors",
             joinColumns = @JoinColumn(name = "author_id"),

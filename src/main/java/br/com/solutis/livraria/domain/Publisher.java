@@ -27,7 +27,7 @@ public class Publisher {
     private String name;
 
     @JsonIgnoreProperties("publisher")
-    @OneToMany(mappedBy = "publisher")
+    @OneToMany(mappedBy = "publisher", fetch = FetchType.EAGER)
     private List<Book> books;
 
     @Temporal(TemporalType.TIMESTAMP)

@@ -133,6 +133,11 @@ public class SaleService {
         saleRepository.deleteById(id);
     }
 
+
     private record BooksAndValue(List<Book> books, float value) {
+
+    public int countSales() {
+        return saleRepository.countSales();
+
     }
 }

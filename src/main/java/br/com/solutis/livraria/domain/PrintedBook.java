@@ -15,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Table(name = "printed_books")
 public class PrintedBook extends Book{
-
     @NotNull(message = "Shipment is required")
     private Float shipment;
 

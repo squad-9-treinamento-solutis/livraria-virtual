@@ -2,7 +2,8 @@
 
 ## 👨‍💻 Projeto
 
-O Squad 9 está desenvolvendo o software para uma livraria virtual, como parte do desafio 01. O projeto é uma livraria virtual que permite aos usuários comprar livros eletrônicos e livros impressos.
+O Squad 9 está desenvolvendo o software para uma livraria virtual, como parte do desafio 01. O projeto é uma livraria
+virtual que permite aos usuários comprar livros eletrônicos e livros impressos.
 
 ## 🛠️ Construído com
 
@@ -20,14 +21,34 @@ O Squad 9 está desenvolvendo o software para uma livraria virtual, como parte d
 git clone https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual.git
 ```
 
-## 📕 Documentação
+### 🔑 Variáveis de ambiente
+
+Renomear o ```application.secrets-example.yml``` para ```application.secrets.yml``` e trocar os seguintes valores:
+
+- `USERNAME`: Your MySQL username.
+- `PASSWORD`: Your MySQL password.
+- `URL`: MySQL URL  ```jdbc:mysql://localhost:3306/YOUR_DATABASE_NAME```
+
+```yml
+spring:
+  datasource:
+    username: ""
+    password: ""
+    url: ""
+```
+
+Obs.: O arquivo se encontra na pasta ```resources```.
+
+## 📕 Documentação da API
+Obs: Para ver o swagger execute a aplicação. O swagger vai ser executado na porta 8080
+- [Swagger](http://localhost:8080/swagger-ui/index.html)
+- [ROUTES.md](./ROUTES.md)
 
 ## 📝 Diagramas
 
 **Banco de dados:**
 
 ![desafio-livraria-virtual-banco-de-dados](https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual/assets/76819323/292ab6ec-66df-48d8-942e-2197c6a53676)
-
 
 ## ✒️ Autores
 
@@ -42,6 +63,7 @@ Todos os integrantes do squad 9 que contribuiram para o projeto.
 
 ## 🎁 Expressões de gratidão
 
-Nós todos do squad 9 agradecemos pela oportunidade de fazer parte desta equipe e participar da dinâmica colaborativa do processo da Solutis School.
+Nós todos do squad 9 agradecemos pela oportunidade de fazer parte desta equipe e participar da dinâmica colaborativa do
+processo da Solutis School.
 
 ---
