@@ -103,4 +103,8 @@ public class SaleService {
     public void deleteSale(Long id) {
         saleRepository.deleteById(id);
     }
+
+    public int countSales() {
+        return saleRepository.countSales();
+    }
 }
