@@ -6,9 +6,8 @@ import br.com.solutis.livraria.dto.PrintedBookDTO;
 import br.com.solutis.livraria.exception.BookNotFoundException;
 import br.com.solutis.livraria.exception.BookServiceException;
 import br.com.solutis.livraria.exception.ErrorResponse;
-import br.com.solutis.livraria.service.AuthorService;
-import br.com.solutis.livraria.service.BookService;
-import br.com.solutis.livraria.service.PublisherService;
+import br.com.solutis.livraria.exception.MaxLimitExceededException;
+import br.com.solutis.livraria.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,23 +32,6 @@ public class BookController {
     private final PublisherService publisherService;
     private final AuthorService authorService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> findById(@PathVariable Long id) {
-        Book book = bookService.findById(id);
-
-        if (book != null) {
-            return new ResponseEntity<>(book, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Book>> findAllBooks() {
-        List<Book> Books = bookService.findAllBooks();
-
-        return new ResponseEntity<>(Books, HttpStatus.OK);
-    }
 
     @PostMapping(path = "/printed")
 
@@ -57,11 +39,11 @@ public class BookController {
 
 
         try {
-          
+
             int printedBooks = printedBookService.countBooks();
 
             if (printedBooks >= MAX_IMPRESSOS) {
-              throw new BadRequestException("Maximum number of printed books reached. Maximum number is: " + MAX_IMPRESSOS);
+                throw new MaxLimitExceededException("Maximum number of printed books reached. Maximum number is: " + MAX_IMPRESSOS);
             }
             List<Author> authors = getAuthorsFromIds(printedBookDTO.getAuthorsId());
             Publisher publisher = publisherService.findById(printedBookDTO.getPublisherId());
@@ -90,7 +72,7 @@ public class BookController {
             int eBooks = eBookService.countBooks();
 
             if (eBooks >= MAX_ELETRONICOS) {
-              throw new BadRequestException("Maximum number of ebooks reached. Maximum number is: " + MAX_ELETRONICOS);
+                throw new MaxLimitExceededException("Maximum number of ebooks reached. Maximum number is: " + MAX_ELETRONICOS);
             }
             List<Author> authors = getAuthorsFromIds(eBookDTO.getAuthorsId());
             Publisher publisher = publisherService.findById(eBookDTO.getPublisherId());
