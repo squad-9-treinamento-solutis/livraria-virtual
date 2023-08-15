@@ -2,6 +2,9 @@ package br.com.solutis.livraria.controller;
 
 import br.com.solutis.livraria.domain.Publisher;
 import br.com.solutis.livraria.dto.PublisherDTO;
+import br.com.solutis.livraria.exception.ErrorResponse;
+import br.com.solutis.livraria.exception.PublisherNotFoundException;
+import br.com.solutis.livraria.exception.PublisherServiceException;
 import br.com.solutis.livraria.service.PublisherService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -22,50 +25,68 @@ public class PublisherController {
 
     @PostMapping()
     @Operation(summary = "CRIAR EDITORA", description = "Cria uma editora")
-    public ResponseEntity<Publisher> addPublisher(@RequestBody @Valid Publisher publisher) {
+    public ResponseEntity<?> addPublisher(@RequestBody @Valid Publisher publisher) {
 
-        return new ResponseEntity<>(publisherService.addPublisher(publisher), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(publisherService.addPublisher(publisher), HttpStatus.CREATED);
+        } catch (PublisherServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error adding author: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @PutMapping
     @Transactional
     @Operation(summary = "ATUALIZAR EDITORA", description = "Atualiza a editora")
-    public ResponseEntity<Publisher> updatePublisher(@RequestBody @Valid PublisherDTO publisherDTO) {
-        if (publisherDTO.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> updatePublisher(@RequestBody @Valid PublisherDTO publisherDTO) {
+
+        try {
+            return new ResponseEntity<>(publisherService.updatePublisher(publisherDTO), HttpStatus.NO_CONTENT);
+        } catch (PublisherServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error adding author: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(publisherService.updatePublisher(publisherDTO), HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "LISTAR AS EDITORAS POR ID", description = "Lista as editoras por id")
-    public ResponseEntity<Publisher> findById(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
-        Publisher publisher = publisherService.findById(id);
 
-        if (publisher != null) {
+        try {
+            Publisher publisher = publisherService.findById(id);
             return new ResponseEntity<>(publisher, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (PublisherNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         }
+
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "DELETAR A EDITORA", description = "deleta a editora")
-    public ResponseEntity<Publisher> deletePublisher(@PathVariable Long id) {
-        publisherService.deletePublisher(id);
+    public ResponseEntity<?> deletePublisher(@PathVariable Long id) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        try {
+            publisherService.deletePublisher(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (PublisherNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @GetMapping
     @Operation(summary = "LISTAR TODAS AS EDITORAS", description = "Lista todas as editoras")
-    public ResponseEntity<List<Publisher>> findAllPublishers() {
-        List<Publisher> publishers = publisherService.findAllPublishers();
+    public ResponseEntity<?> findAllPublishers() {
 
-        public ResponseEntity<List<Publisher>> findAllPublichers () {
-            List<Publisher> publichers = publisherService.findAllPublichers();
+
+        try {
+            List<Publisher> publishers = publisherService.findAllPublishers();
             return new ResponseEntity<>(publishers, HttpStatus.OK);
+        } catch (PublisherServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
+}

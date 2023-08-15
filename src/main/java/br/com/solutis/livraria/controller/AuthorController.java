@@ -2,6 +2,9 @@ package br.com.solutis.livraria.controller;
 
 import br.com.solutis.livraria.domain.Author;
 import br.com.solutis.livraria.dto.AuthorDTO;
+import br.com.solutis.livraria.exception.AuthorNotFoundException;
+import br.com.solutis.livraria.exception.AuthorServiceException;
+import br.com.solutis.livraria.exception.ErrorResponse;
 import br.com.solutis.livraria.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -22,47 +25,61 @@ public class AuthorController {
 
     @PostMapping
     @Operation(summary = "CRIAR AUTOR", description = "Cria um autor")
-    public ResponseEntity<Author> addAuthor(@RequestBody @Valid Author author) {
-        return new ResponseEntity<>(authorService.addAuthor(author), HttpStatus.CREATED);
-    }
+    public ResponseEntity<?> addAuthor(@RequestBody @Valid Author author) {
+        try {
+            return new ResponseEntity<>(authorService.addAuthor(author), HttpStatus.CREATED);
+        } catch (AuthorServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error adding author: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     @PutMapping
     @Transactional
     @Operation(summary = "ATUALIZAR AUTOR", description = "Atualiza o autor")
-    public ResponseEntity<Author> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
-        if (authorDTO.getId() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        public ResponseEntity<?> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
 
-        return new ResponseEntity<>(authorService.updateAuthor(authorDTO), HttpStatus.NO_CONTENT);
+        try {
+            return new ResponseEntity<>(authorService.updateAuthor(authorDTO), HttpStatus.NO_CONTENT);
+        } catch (AuthorServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error updating author: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "LISTAR OS AUTORES POR ID", description = "Lista autores por id")
-    public ResponseEntity<Author> findById(@PathVariable Long id) {
-        Author author = authorService.findById(id);
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
-        if (author != null) {
+
+        try {
+            Author author = authorService.findById(id);
             return new ResponseEntity<>(author, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (AuthorNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping
     @Operation(summary = "LISTAR TODOS OS AUTORES", description = "Lista todos os autores")
-    public ResponseEntity<List<Author>> findAllAuthors() {
-        List<Author> Authors = authorService.findAllAuthors();
+    public ResponseEntity<?> findAllAuthors() {
 
-        return new ResponseEntity<>(Authors, HttpStatus.OK);
+        try {
+            List<Author> Authors = authorService.findAllAuthors();
+            return new ResponseEntity<>(Authors, HttpStatus.OK);
+        } catch (AuthorServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "DELETAR AUTOR", description = "Deleta autor")
-    public ResponseEntity<Author> deleteAuthor(@PathVariable Long id) {
-        authorService.deleteAuthor(id);
+    public ResponseEntity<?> deleteAuthor(@PathVariable Long id) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            authorService.deleteAuthor(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (AuthorNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
 
 }

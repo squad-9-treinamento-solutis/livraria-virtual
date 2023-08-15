@@ -2,11 +2,15 @@ package br.com.solutis.livraria.controller;
 
 import br.com.solutis.livraria.domain.Sale;
 import br.com.solutis.livraria.dto.SaleDTO;
-import br.com.solutis.livraria.exception.BadRequestException;
+import br.com.solutis.livraria.exception.ErrorResponse;
+import br.com.solutis.livraria.exception.SaleServiceException;
 import br.com.solutis.livraria.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,22 +23,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin
 public class SaleController {
+
     private static final int MAX_VENDAS = 50;
 
     private final SaleService saleService;
-
-    @PostMapping
-    @Operation(summary = "CRIAR VENDA", description = "Cria uma venda")
-    public ResponseEntity<Sale> addSale(@RequestBody @Valid SaleDTO saleDTO) {
-        return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
-    }
-
-    @PutMapping
-    @Transactional
-    @Operation(summary = "ATUALIZAR VENDA", description = "Atualiza uma venda")
-    public ResponseEntity<Sale> updateSale(@RequestBody @Valid SaleDTO saleDTO) {
-        return new ResponseEntity<>(saleService.updateSale(saleDTO), HttpStatus.NO_CONTENT);
-    }
 
     @GetMapping("/{id}")
     @Operation(summary = "LISTAR VENDA POR ID", description = "Lista a venda por Id")
@@ -48,14 +40,6 @@ public class SaleController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "DELETAR VENDA", description = "Deleta venda")
-    public ResponseEntity<Sale> deleteSale(@PathVariable Long id) {
-        saleService.deleteSale(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping
     @Operation(summary = "LISTAR TODAS AS VENDAS", description = "Lista todas as venda")
     public ResponseEntity<List<Sale>> findAllSales() {
@@ -65,24 +49,66 @@ public class SaleController {
     }
 
     @PostMapping
-    public ResponseEntity<Sale> addSale(@RequestBody @Valid SaleDTO saleDTO) {
-        if (saleService.countSales() >= MAX_VENDAS) {
-            throw new BadRequestException("Maximum number of sales reached. Maximum number is: " + MAX_VENDAS);
+    @Operation(summary = "CRIAR VENDA", description = "Cria uma venda")
+    public ResponseEntity<?> addSale(@RequestBody @Valid SaleDTO saleDTO) {
+        try {
+            return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
+        } catch (SaleServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error adding sale: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
     }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<Sale> updateSale(@RequestBody @Valid SaleDTO saleDTO) {
-        return new ResponseEntity<>(saleService.updateSale(saleDTO), HttpStatus.NO_CONTENT);
+    @Operation(summary = "ATUALIZAR VENDA", description = "Atualizar venda")
+    public ResponseEntity<?> updateSale(@RequestBody @Valid SaleDTO saleDTO) {
+        try {
+            return new ResponseEntity<>(saleService.updateSale(saleDTO), HttpStatus.NO_CONTENT);
+        } catch (SaleServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse("Error updating sale: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Sale> deleteSale(@PathVariable Long id) {
-        saleService.deleteSale(id);
+    @GetMapping("/{id}")
+    @Operation(summary = "LISTAR VENDA POR ID", description = "Lista a venda por Id")
+    public ResponseEntity<?> findById(@PathVariable Long id) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            Sale sale = saleService.findById(id);
+            return new ResponseEntity<>(sale, HttpStatus.OK);
+        } catch (SaleServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "DELETAR VENDA", description = "Deletar venda")
+    public ResponseEntity<?> deleteSale(@PathVariable Long id) {
+
+
+        try {
+            saleService.deleteSale(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (SaleServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @GetMapping
+    @Operation(summary = "LISTAR TODAS AS VENDAS", description = "Lista todas as vendas")
+    public ResponseEntity<?> findAllSales() {
+
+        try {
+            List<Sale> sales = saleService.findAllSales();
+            return new ResponseEntity<>(sales, HttpStatus.OK);
+        } catch (SaleServiceException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

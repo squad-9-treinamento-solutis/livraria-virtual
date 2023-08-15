@@ -2,7 +2,8 @@ package br.com.solutis.livraria.service;
 
 import br.com.solutis.livraria.domain.Publisher;
 import br.com.solutis.livraria.dto.PublisherDTO;
-import br.com.solutis.livraria.exception.BadRequestException;
+import br.com.solutis.livraria.exception.PublisherNotFoundException;
+import br.com.solutis.livraria.exception.PublisherServiceException;
 import br.com.solutis.livraria.repository.PublisherRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,31 +20,50 @@ public class PublisherService {
 
     public Publisher addPublisher(Publisher publisher) {
         LOGGER.info("Adding publisher: {}", publisher);
-        return publisherRepository.save(publisher);
+        try {
+            return publisherRepository.save(publisher);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new PublisherServiceException("An error occurred while adding publisher", e);
+        }
+
     }
 
     public Publisher updatePublisher(PublisherDTO publisherDTO) {
         LOGGER.info("Updating publisher with ID: {}", publisherDTO.getId());
         findById(publisherDTO.getId());
 
-        return publisherRepository.save(
-                Publisher.builder()
-                        .id(publisherDTO.getId())
-                        .name(publisherDTO.getName())
-                        .build()
-        );
+        try {
+            return publisherRepository.save(
+                    Publisher.builder()
+                            .id(publisherDTO.getId())
+                            .name(publisherDTO.getName())
+                            .build()
+            );
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new PublisherServiceException("An error occurred while updating publisher", e);
+        }
+
     }
 
     public Publisher findById(Long id) {
         LOGGER.info("Finding publisher with ID: {}", id);
-        return publisherRepository.findById(id).orElseThrow(() -> new BadRequestException("Publisher not found"));
+        return publisherRepository.findById(id).orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
     public List<Publisher> findAllPublishers() {
-        return publisherRepository.findAll();
+        try {
+            return publisherRepository.findAll();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            throw new PublisherServiceException("An error occurred while fetching publishers.", e);
+        }
+
     }
 
     public void deletePublisher(Long id) {
+        findById(id);
         publisherRepository.deleteById(id);
     }
 }
