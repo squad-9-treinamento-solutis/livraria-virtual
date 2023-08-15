@@ -40,7 +40,8 @@ spring:
 Obs.: O arquivo se encontra na pasta ```resources```.
 
 ## 📕 Documentação da API
-- ![Swagger](http://localhost:8080/swagger-ui/index.html#/)
+Obs: Para ver o swagger execute a aplicação. O swagger vai ser executado na porta 8080
+- [Swagger](http://localhost:8080/swagger-ui/index.html)
 - [ROUTES.md](./ROUTES.md)
 
 ## 📝 Diagramas
