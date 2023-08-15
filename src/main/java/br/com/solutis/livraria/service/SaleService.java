@@ -4,6 +4,7 @@ import br.com.solutis.livraria.domain.Book;
 import br.com.solutis.livraria.domain.PrintedBook;
 import br.com.solutis.livraria.domain.Sale;
 import br.com.solutis.livraria.dto.SaleDTO;
+import br.com.solutis.livraria.exception.SaleNotFoundException;
 import br.com.solutis.livraria.exception.SaleServiceException;
 import br.com.solutis.livraria.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +82,7 @@ public class SaleService {
     public Sale findById(Long id) {
         LOGGER.info("Finding sale with ID: {}", id);
         return saleRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Sale not found"));
+                .orElseThrow(() -> new SaleNotFoundException(id));
     }
 
     private BooksAndValue getBookList(SaleDTO sale) {
@@ -92,13 +93,17 @@ public class SaleService {
             Book book = bookService.findById(id);
 
             if (book instanceof PrintedBook printedBook) {
-                int stock = printedBook.getStock();
-                if (stock > 0) {
-                    printedBook.setStock(printedBook.getStock() - 1);
-                } else {
+
+                try {
+                    int stock = printedBook.getStock();
+                    if (stock > 0) {
+                        printedBook.setStock(printedBook.getStock() - 1);
+                    }
+                } catch (Exception e) {
                     LOGGER.error("Book out of Stock with ID: {}", printedBook.getId());
-                    throw new BadRequestException("Book Out of Stock");
+                    throw new SaleServiceException("An error occurred while fetching publishers.", e);
                 }
+
             }
 
             value += book.getPrice();

@@ -2,6 +2,7 @@ package br.com.solutis.livraria.service;
 
 import br.com.solutis.livraria.domain.Publisher;
 import br.com.solutis.livraria.dto.PublisherDTO;
+import br.com.solutis.livraria.exception.PublisherNotFoundException;
 import br.com.solutis.livraria.exception.PublisherServiceException;
 import br.com.solutis.livraria.repository.PublisherRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class PublisherService {
 
     public Publisher findById(Long id) {
         LOGGER.info("Finding publisher with ID: {}", id);
-        return publisherRepository.findById(id).orElseThrow(() -> new BadRequestException("Publisher not found"));
+        return publisherRepository.findById(id).orElseThrow(() -> new PublisherNotFoundException(id));
     }
 
     public List<Publisher> findAllPublishers() {

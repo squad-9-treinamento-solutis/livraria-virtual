@@ -24,7 +24,7 @@ public class AuthorService {
             return authorRepository.save(author);
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new AuthorPersistenceException("An error occurred while adding author.", e);
+            throw new AuthorServiceException("An error occurred while adding author.", e);
         }
     }
 
@@ -41,7 +41,7 @@ public class AuthorService {
             );
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
-            throw new AuthorPersistenceException("An error occurred while updating author.", e);
+            throw new AuthorServiceException("An error occurred while updating author.", e);
         }
     }
 
