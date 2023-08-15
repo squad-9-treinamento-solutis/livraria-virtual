@@ -6,6 +6,7 @@ import br.com.solutis.livraria.exception.AuthorNotFoundException;
 import br.com.solutis.livraria.exception.AuthorServiceException;
 import br.com.solutis.livraria.exception.ErrorResponse;
 import br.com.solutis.livraria.service.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,17 +24,18 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @PostMapping
+    @Operation(summary = "CRIAR AUTOR", description = "Cria um autor")
     public ResponseEntity<?> addAuthor(@RequestBody @Valid Author author) {
         try {
             return new ResponseEntity<>(authorService.addAuthor(author), HttpStatus.CREATED);
         } catch (AuthorServiceException e) {
             return new ResponseEntity<>(new ErrorResponse("Error adding author: " + e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
 
     @PutMapping
     @Transactional
-    public ResponseEntity<?> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
+    @Operation(summary = "ATUALIZAR AUTOR", description = "Atualiza o autor")
+        public ResponseEntity<?> updateAuthor(@RequestBody @Valid AuthorDTO authorDTO) {
 
         try {
             return new ResponseEntity<>(authorService.updateAuthor(authorDTO), HttpStatus.NO_CONTENT);
@@ -43,6 +45,7 @@ public class AuthorController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "LISTAR OS AUTORES POR ID", description = "Lista autores por id")
     public ResponseEntity<?> findById(@PathVariable Long id) {
 
 
@@ -55,6 +58,7 @@ public class AuthorController {
     }
 
     @GetMapping
+    @Operation(summary = "LISTAR TODOS OS AUTORES", description = "Lista todos os autores")
     public ResponseEntity<?> findAllAuthors() {
 
         try {
@@ -67,6 +71,7 @@ public class AuthorController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "DELETAR AUTOR", description = "Deleta autor")
     public ResponseEntity<?> deleteAuthor(@PathVariable Long id) {
 
         try {

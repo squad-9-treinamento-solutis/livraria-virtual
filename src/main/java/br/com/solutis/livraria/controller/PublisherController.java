@@ -6,6 +6,7 @@ import br.com.solutis.livraria.exception.ErrorResponse;
 import br.com.solutis.livraria.exception.PublisherNotFoundException;
 import br.com.solutis.livraria.exception.PublisherServiceException;
 import br.com.solutis.livraria.service.PublisherService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class PublisherController {
     private final PublisherService publisherService;
 
     @PostMapping()
+    @Operation(summary = "CRIAR EDITORA", description = "Cria uma editora")
     public ResponseEntity<?> addPublisher(@RequestBody @Valid Publisher publisher) {
 
         try {
@@ -35,6 +37,7 @@ public class PublisherController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "ATUALIZAR EDITORA", description = "Atualiza a editora")
     public ResponseEntity<?> updatePublisher(@RequestBody @Valid PublisherDTO publisherDTO) {
 
         try {
@@ -46,6 +49,7 @@ public class PublisherController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "LISTAR AS EDITORAS POR ID", description = "Lista as editoras por id")
     public ResponseEntity<?> findById(@PathVariable Long id) {
 
 
@@ -59,6 +63,7 @@ public class PublisherController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "DELETAR A EDITORA", description = "deleta a editora")
     public ResponseEntity<?> deletePublisher(@PathVariable Long id) {
 
 
@@ -72,6 +77,7 @@ public class PublisherController {
     }
 
     @GetMapping
+    @Operation(summary = "LISTAR TODAS AS EDITORAS", description = "Lista todas as editoras")
     public ResponseEntity<?> findAllPublishers() {
 
 

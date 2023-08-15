@@ -8,6 +8,12 @@ import br.com.solutis.livraria.exception.BookServiceException;
 import br.com.solutis.livraria.exception.ErrorResponse;
 import br.com.solutis.livraria.exception.MaxLimitExceededException;
 import br.com.solutis.livraria.service.*;
+import br.com.solutis.livraria.service.AuthorService;
+import br.com.solutis.livraria.service.BookService;
+import br.com.solutis.livraria.service.PublisherService;
+import br.com.solutis.livraria.exception.BadRequestException;
+import br.com.solutis.livraria.service.*;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,9 +38,28 @@ public class BookController {
     private final PublisherService publisherService;
     private final AuthorService authorService;
 
+    @GetMapping("/{id}")
+    @Operation(summary = "LISTAR LIVROS POR ID", description = "Lista o livro por Id")
+    public ResponseEntity<Book> findById(@PathVariable Long id) {
+        Book book = bookService.findById(id);
+
+        if (book != null) {
+            return new ResponseEntity<>(book, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    @Operation(summary = "LISTAR TODOS OS LIVROS", description = "Lista todos os livros")
+    public ResponseEntity<List<Book>> findAllBooks() {
+        List<Book> Books = bookService.findAllBooks();
+
+        return new ResponseEntity<>(Books, HttpStatus.OK);
+    }
 
     @PostMapping(path = "/printed")
-
+    @Operation(summary = "CRIAR LIVRO IMPRESSO", description = "Cria um livro impresso")
     public ResponseEntity<?> addPrintedBook(@RequestBody @Valid PrintedBookDTO printedBookDTO) {
 
 
@@ -65,6 +90,7 @@ public class BookController {
     }
 
     @PostMapping(path = "/eletronic")
+    @Operation(summary = "CRIAR EBOOK", description = "Cria o livro eletronico")
     public ResponseEntity<?> addEbook(@RequestBody @Valid EBookDTO eBookDTO) {
 
 
@@ -94,6 +120,7 @@ public class BookController {
 
     @PutMapping(path = "/printed")
     @Transactional
+    @Operation(summary = "ATUALIZAR LIVRO IMPRESSO", description = "Atualiza o livro impresso")
     public ResponseEntity<?> updatePrintedBook(@RequestBody PrintedBookDTO printedBookDTO) {
 
 
@@ -119,6 +146,7 @@ public class BookController {
 
     @PutMapping(path = "/eletronic")
     @Transactional
+    @Operation(summary = "ATUALIZAR EBOOK", description = "Atualiza o livro eletronico")
     public ResponseEntity<?> updateEletronicBook(@RequestBody @Valid EBookDTO eBookDTO) {
 
 
@@ -143,6 +171,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "LISTAR OS LIVROS POR ID", description = "Lista livros por id")
     public ResponseEntity<?> findById(@PathVariable Long id) {
 
 
@@ -156,8 +185,8 @@ public class BookController {
     }
 
     @GetMapping
+    @Operation(summary = "LISTAR TODOS OS LIVROS", description = "Lista todos os livros")
     public ResponseEntity<?> findAllBooks() {
-
 
         try {
             List<Book> Books = bookService.findAllBooks();
@@ -170,6 +199,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "DELETAR LIVRO", description = "Deleta livro")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
 
         try {

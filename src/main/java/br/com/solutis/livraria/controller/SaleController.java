@@ -5,8 +5,12 @@ import br.com.solutis.livraria.dto.SaleDTO;
 import br.com.solutis.livraria.exception.ErrorResponse;
 import br.com.solutis.livraria.exception.SaleServiceException;
 import br.com.solutis.livraria.service.SaleService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +25,31 @@ import java.util.List;
 public class SaleController {
 
     private static final int MAX_VENDAS = 50;
+
     private final SaleService saleService;
 
+    @GetMapping("/{id}")
+    @Operation(summary = "LISTAR VENDA POR ID", description = "Lista a venda por Id")
+    public ResponseEntity<Sale> findById(@PathVariable Long id) {
+        Sale sale = saleService.findById(id);
+
+        if (sale != null) {
+            return new ResponseEntity<>(sale, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    @Operation(summary = "LISTAR TODAS AS VENDAS", description = "Lista todas as venda")
+    public ResponseEntity<List<Sale>> findAllSales() {
+        List<Sale> sales = saleService.findAllSales();
+
+        return new ResponseEntity<>(sales, HttpStatus.OK);
+    }
+
     @PostMapping
+    @Operation(summary = "CRIAR VENDA", description = "Cria uma venda")
     public ResponseEntity<?> addSale(@RequestBody @Valid SaleDTO saleDTO) {
         try {
             return new ResponseEntity<>(saleService.addSale(saleDTO), HttpStatus.CREATED);
@@ -35,6 +61,7 @@ public class SaleController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "ATUALIZAR VENDA", description = "Atualizar venda")
     public ResponseEntity<?> updateSale(@RequestBody @Valid SaleDTO saleDTO) {
         try {
             return new ResponseEntity<>(saleService.updateSale(saleDTO), HttpStatus.NO_CONTENT);
@@ -45,6 +72,7 @@ public class SaleController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "LISTAR VENDA POR ID", description = "Lista a venda por Id")
     public ResponseEntity<?> findById(@PathVariable Long id) {
 
         try {
@@ -58,6 +86,7 @@ public class SaleController {
 
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "DELETAR VENDA", description = "Deletar venda")
     public ResponseEntity<?> deleteSale(@PathVariable Long id) {
 
 
@@ -71,6 +100,7 @@ public class SaleController {
     }
 
     @GetMapping
+    @Operation(summary = "LISTAR TODAS AS VENDAS", description = "Lista todas as vendas")
     public ResponseEntity<?> findAllSales() {
 
         try {
