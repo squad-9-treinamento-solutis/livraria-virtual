@@ -3,6 +3,7 @@ package br.com.solutis.livraria.controller;
 import br.com.solutis.livraria.domain.Publisher;
 import br.com.solutis.livraria.dto.PublisherDTO;
 import br.com.solutis.livraria.service.PublisherService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class PublisherController {
     private final PublisherService publisherService;
 
     @PostMapping()
+    @Operation(summary = "CRIAR EDITORA", description = "Cria uma editora")
     public ResponseEntity<Publisher> addPublisher(@RequestBody @Valid Publisher publisher) {
 
         return new ResponseEntity<>(publisherService.addPublisher(publisher), HttpStatus.CREATED);
@@ -27,6 +29,7 @@ public class PublisherController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "ATUALIZAR EDITORA", description = "Atualiza a editora")
     public ResponseEntity<Publisher> updatePublisher(@RequestBody @Valid PublisherDTO publisherDTO) {
         if (publisherDTO.getId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -36,6 +39,7 @@ public class PublisherController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "LISTAR AS EDITORAS POR ID", description = "Lista as editoras por id")
     public ResponseEntity<Publisher> findById(@PathVariable Long id) {
 
         Publisher publisher = publisherService.findById(id);
@@ -48,6 +52,7 @@ public class PublisherController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "DELETAR A EDITORA", description = "deleta a editora")
     public ResponseEntity<Publisher> deletePublisher(@PathVariable Long id) {
         publisherService.deletePublisher(id);
 
@@ -55,9 +60,12 @@ public class PublisherController {
     }
 
     @GetMapping
+    @Operation(summary = "LISTAR TODAS AS EDITORAS", description = "Lista todas as editoras")
     public ResponseEntity<List<Publisher>> findAllPublishers() {
         List<Publisher> publishers = publisherService.findAllPublishers();
 
-        return new ResponseEntity<>(publishers, HttpStatus.OK);
+        public ResponseEntity<List<Publisher>> findAllPublichers () {
+            List<Publisher> publichers = publisherService.findAllPublichers();
+            return new ResponseEntity<>(publishers, HttpStatus.OK);
+        }
     }
-}
