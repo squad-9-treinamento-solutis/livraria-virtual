@@ -2,7 +2,8 @@
 
 ## 👨‍💻 Projeto
 
-O Squad 9 está desenvolvendo o software para uma livraria virtual, como parte do desafio 01. O projeto é uma livraria virtual que permite aos usuários comprar livros eletrônicos e livros impressos.
+O Squad 9 está desenvolvendo o software para uma livraria virtual, como parte do desafio 01. O projeto é uma livraria
+virtual que permite aos usuários comprar livros eletrônicos e livros impressos.
 
 ## 🛠️ Construído com
 
@@ -20,14 +21,15 @@ O Squad 9 está desenvolvendo o software para uma livraria virtual, como parte d
 git clone https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual.git
 ```
 
-## 📕 Documentação
+## 📕 Documentação da API
+
+- [ROUTES.md](./ROUTES.md)
 
 ## 📝 Diagramas
 
 **Banco de dados:**
 
 ![desafio-livraria-virtual-banco-de-dados](https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual/assets/76819323/292ab6ec-66df-48d8-942e-2197c6a53676)
-
 
 ## ✒️ Autores
 
@@ -42,6 +44,7 @@ Todos os integrantes do squad 9 que contribuiram para o projeto.
 
 ## 🎁 Expressões de gratidão
 
-Nós todos do squad 9 agradecemos pela oportunidade de fazer parte desta equipe e participar da dinâmica colaborativa do processo da Solutis School.
+Nós todos do squad 9 agradecemos pela oportunidade de fazer parte desta equipe e participar da dinâmica colaborativa do
+processo da Solutis School.
 
 ---
