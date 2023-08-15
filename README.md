@@ -46,9 +46,14 @@ Obs: Para ver o swagger execute a aplicação. O swagger vai ser executado na po
 
 ## 📝 Diagramas
 
+**Diagrama de classes**
+![image](https://github.com/squad-9-treinamento-solutis/livraria-virtual/assets/79974062/3f82efcf-3999-48ae-b91f-128d1d25502a)
+
 **Banco de dados:**
 
 ![desafio-livraria-virtual-banco-de-dados](https://github.com/squad-9-treinamento-solutis/desafio-livraria-virtual/assets/76819323/292ab6ec-66df-48d8-942e-2197c6a53676)
+
+
 
 ## ✒️ Autores
 
