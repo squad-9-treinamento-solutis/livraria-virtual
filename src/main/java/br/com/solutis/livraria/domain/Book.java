@@ -32,12 +32,12 @@ public abstract class Book {
     private Float price;
 
     @JsonIgnoreProperties("books")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
     @JsonIgnoreProperties("books")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "books_authors",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -46,7 +46,7 @@ public abstract class Book {
     private List<Author> authors;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "books_sales",
             joinColumns = @JoinColumn(name = "book_id"),
